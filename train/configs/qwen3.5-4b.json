@@ -1,0 +1,22 @@
+{
+  "key": "qwen3.5-4b",
+  "model_id": "Qwen/Qwen3.5-4B",
+  "fmt": "qwen3_5",
+  "parser": "qwen3_coder",
+  "reasoning_parser": "qwen3",
+  "template": "qwen3_coder",
+  "nightly_vllm": true,
+  "attn_candidates": ["sdpa"],
+  "trust_remote_code": false,
+  "dtype": "bfloat16",
+  "quirks": [
+    "processing_class must be the tokenizer: AutoProcessor pulls Qwen2VLImageProcessor (unified-VL) and crashes",
+    "raw template requires tool_calls[].function.arguments as dict (renderer converts JSON strings internally)",
+    "template refuses system-only prefixes - render from first user turn (prefix-diff masking handles)",
+    "consecutive tool responses regrouped into one turn - prefix-diff masking repairs (masked side only)",
+    "hybrid linear attention (Gated DeltaNet) - packing unsafe, no packing",
+    "gradient checkpointing required to fit 24GB at seq 8192",
+    "rendered tool calls are XML-ish <function=name><parameter=...> plus an empty <think> block",
+    "flash-linear-attention provides DeltaNet kernels; causal-conv1d absent -> reference conv1d impl (slower, correct)"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "key": "qwen3-4b-2507",
+  "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+  "fmt": "qwen3_2507",
+  "parser": "hermes",
+  "reasoning_parser": null,
+  "template": "hermes",
+  "nightly_vllm": false,
+  "attn_candidates": ["flash_attention_2", "sdpa"],
+  "trust_remote_code": false,
+  "dtype": "bfloat16",
+  "quirks": [
+    "Hermes <tool_call>{json}</tool_call> template, tools= kwarg supported",
+    "consecutive tool responses regrouped into one turn - prefix-diff masking repairs (masked side only)",
+    "flash-attn package not installed in train venv - attn falls back to sdpa"
+  ]
+}

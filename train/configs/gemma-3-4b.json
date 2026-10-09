@@ -1,0 +1,20 @@
+{
+  "key": "gemma-3-4b",
+  "model_id": "unsloth/gemma-3-4b-it",
+  "fmt": "gemma_hermes",
+  "parser": "hermes",
+  "reasoning_parser": null,
+  "template": "hermes",
+  "nightly_vllm": false,
+  "attn_candidates": ["flash_attention_2", "sdpa"],
+  "trust_remote_code": false,
+  "dtype": "bfloat16",
+  "quirks": [
+    "bf16-only - gemma3 numerics break in fp16, never load in fp16",
+    "multimodal checkpoint - AutoModelForCausalLM may fail, falls back to AutoModelForImageTextToText (text tower only)",
+    "no system role - template merges system into first user turn (prefix-diff masking handles)",
+    "hermes_transplant: vLLM serving needs transplanted Hermes tool template (parser=hermes)",
+    "gated repo - HF_TOKEN required; weights NOT yet downloaded - pre-download before training",
+    "train <eos> appended after final <end_of_turn> if template render does not end with eos"
+  ]
+}

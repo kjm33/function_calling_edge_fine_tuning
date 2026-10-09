@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "lsp": {
+    "python": {
+      "command": ["/home/kamil/.local/bin/pyright-langserver", "--stdio"],
+      "extensions": ["py"],
+      "initialization": {
+        "python": {
+          "pythonPath": "/home/kamil/projects/here/function_calling_edge_fine_tuning/.venv/bin/python"
+        }
+      }
+    }
+  }
+}

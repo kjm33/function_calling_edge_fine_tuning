@@ -1,0 +1,30 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# venvs & caches
+.venv/
+train/venv/
+eval/venv/
+venv/
+hf_cache
+
+# logs
+logs/
+*.log
+eval/results/logs/
+
+# training artifacts (adapters, checkpoints — 16G+)
+train/runs/
+
+# generated data (large, append-mode artifacts)
+data/*
+!data/gold_seed_ids.json
+
+# misc
+.opencode/
+.DS_Store

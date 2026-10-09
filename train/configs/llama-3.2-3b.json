@@ -1,0 +1,18 @@
+{
+  "key": "llama-3.2-3b",
+  "model_id": "unsloth/Llama-3.2-3B-Instruct",
+  "fmt": "llama3_json",
+  "parser": "llama3_json",
+  "reasoning_parser": null,
+  "template": "llama3_json",
+  "nightly_vllm": false,
+  "attn_candidates": ["flash_attention_2", "sdpa"],
+  "trust_remote_code": false,
+  "dtype": "bfloat16",
+  "quirks": [
+    "gated repo - HF_TOKEN required, weights NOT yet downloaded (tokenizer-only downloaded)",
+    "weights must be pre-downloaded before training: huggingface-cli download meta-llama/Llama-3.2-3B-Instruct",
+    "template regroups consecutive tool responses - prefix-diff masking repairs",
+    "weights fit 24GB easily (3B)"
+  ]
+}

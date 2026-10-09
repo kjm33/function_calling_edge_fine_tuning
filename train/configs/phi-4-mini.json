@@ -1,0 +1,18 @@
+{
+  "key": "phi-4-mini",
+  "model_id": "microsoft/Phi-4-mini-instruct",
+  "fmt": "phi4_mini",
+  "parser": "phi4_mini_json",
+  "reasoning_parser": null,
+  "template": "phi4_mini",
+  "nightly_vllm": false,
+  "attn_candidates": ["flash_attention_2", "sdpa"],
+  "trust_remote_code": false,
+  "dtype": "bfloat16",
+  "quirks": [
+    "trust_remote_code MUST stay false: repo remote modeling_phi3.py imports LossKwargs (removed in transformers 5.x) -> ImportError; native Phi3ForCausalLM loads it fine (architectures matches)",
+    "weights NOT yet downloaded (tokenizer-only downloaded) - pre-download before training",
+    "no native tool-calls field in chat template - tool calls rendered as JSON in content by renderer",
+    "3.8B - fits 24GB at seq 8192 with grad checkpointing"
+  ]
+}

@@ -1,0 +1,1451 @@
+{
+  "generated_at": "2026-10-09T15:50:51",
+  "n_tools": 22,
+  "tools": [
+    {
+      "name": "here_directions",
+      "provider": "here",
+      "description": "Compute a driving/walking/truck route between origin and destination using HERE Routing v8. Returns distance (m), duration (s), and departure/arrival times.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transportMode": {
+            "type": "string",
+            "enum": [
+              "car",
+              "truck",
+              "pedestrian",
+              "bicycle",
+              "scooter"
+            ],
+            "description": "Transport mode"
+          },
+          "origin": {
+            "type": "string",
+            "description": "Origin as 'lat,lng'"
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination as 'lat,lng'"
+          },
+          "via": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional waypoints as 'lat,lng' list"
+          },
+          "departureTime": {
+            "type": "string",
+            "description": "ISO datetime; omit for now"
+          },
+          "routingMode": {
+            "type": "string",
+            "enum": [
+              "fast",
+              "short"
+            ],
+            "description": "Fastest or shortest route"
+          },
+          "avoid_features": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "tollRoad",
+                "ferry",
+                "motorway",
+                "tunnel"
+              ],
+              "description": "Features to avoid"
+            }
+          },
+          "lang": {
+            "type": "string",
+            "description": "Language for route instructions"
+          }
+        },
+        "required": [
+          "transportMode",
+          "origin",
+          "destination"
+        ]
+      }
+    },
+    {
+      "name": "here_geocode",
+      "provider": "here",
+      "description": "Geocode a free-text address or place name to coordinates using HERE. Returns best match with lat/lng, formatted address, and country.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Address or place name, e.g. 'Brandenburger Tor, Berlin'"
+          },
+          "lang": {
+            "type": "string",
+            "description": "ISO-639-1 language for results, e.g. 'en', 'de', 'pl'"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Max results (1-100)",
+            "default": 3
+          }
+        },
+        "required": [
+          "q"
+        ]
+      }
+    },
+    {
+      "name": "here_reverse_geocode",
+      "provider": "here",
+      "description": "Reverse-geocode coordinates to the nearest address / place using HERE.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "description": "Position as 'lat,lng', e.g. '52.5163,13.3777'"
+          },
+          "lang": {
+            "type": "string",
+            "description": "ISO-639-1 language for results"
+          }
+        },
+        "required": [
+          "at"
+        ]
+      }
+    },
+    {
+      "name": "here_search_places",
+      "provider": "here",
+      "description": "Search for places / POIs by name or category around a location using HERE Discover. Example: 'restaurants near Eiffel Tower'.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Free-text place query, e.g. 'charging station'"
+          },
+          "at": {
+            "type": "string",
+            "description": "Search center as 'lat,lng'"
+          },
+          "in_country": {
+            "type": "string",
+            "description": "ISO-3 country code filter, e.g. 'DEU'"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Max results (1-100)",
+            "default": 5
+          }
+        },
+        "required": [
+          "q",
+          "at"
+        ]
+      }
+    },
+    {
+      "name": "here_traffic_incidents",
+      "provider": "here",
+      "description": "Get active traffic incidents (accidents, congestion, roadworks) in a circular area using HERE Traffic v7.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Circular area, e.g. 'circle:52.52,13.40;r=10000' (r in meters)"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      }
+    },
+    {
+      "name": "nominatim_geocode",
+      "provider": "keyless",
+      "description": "Geocode an address or place name using OpenStreetMap Nominatim. Keyless.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Free-text address or place"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Max results",
+            "default": 3
+          }
+        },
+        "required": [
+          "q"
+        ]
+      }
+    },
+    {
+      "name": "open_meteo_forecast",
+      "provider": "keyless",
+      "description": "Get weather forecast for coordinates using Open-Meteo (keyless). Returns hourly temperature, precipitation, wind for next 24h plus daily summary.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "description": "Latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude"
+          },
+          "days": {
+            "type": "integer",
+            "description": "Forecast days (1-7)",
+            "default": 2
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      }
+    },
+    {
+      "name": "osrm_route",
+      "provider": "keyless",
+      "description": "Compute a driving route between coordinates using OSRM (OpenStreetMap). Returns distance in km and duration in minutes.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "coordinates": {
+            "type": "string",
+            "description": "Semicolon-separated 'lng,lat' pairs (lon first!), e.g. '13.405,52.52;11.582,48.135'"
+          }
+        },
+        "required": [
+          "coordinates"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-area-search",
+      "provider": "tomtom",
+      "description": "Find all POIs within a strict geographic boundary — polygon, bounding box, or circle. Use this when the search must be confined to a specific region (e.g. 'restaurants inside Westminster', 'hotels within this polygon'). Unlike tomtom-nearby (radius from a point) or tomtom-poi-search (location bias), this tool guarantees results are inside the defined geometry. The search area outline is omitted unless response_detail is 'geometry'.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "What to search for in the area. Examples: 'restaurant', 'hotel', 'parking', 'pharmacy', 'ATM'."
+          },
+          "center": {
+            "description": "Center position as [longitude, latitude] for circular area search (GeoJSON convention). Use with radius. Example: [4.89707, 52.377956] for Amsterdam.",
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "radius": {
+            "description": "Radius in meters for circular area search. Required with center. Examples: 500, 1000, 5000.",
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "polygon": {
+            "description": "Polygon vertices as [[longitude, latitude], ...] (GeoJSON convention). Minimum 3 points, automatically closed. Use instead of center/radius for irregular areas.",
+            "minItems": 3,
+            "type": "array",
+            "items": {
+              "minItems": 2,
+              "maxItems": 2,
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "boundingBox": {
+            "description": "Rectangular bounding box as [[topLeftLon, topLeftLat], [bottomRightLon, bottomRightLat]] (GeoJSON convention). Use instead of center/radius or polygon. Example: [[4.8, 52.45], [4.95, 52.3]] for Amsterdam area.",
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "minItems": 2,
+              "maxItems": 2,
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "limit": {
+            "description": "Maximum number of results (1-100). Default: 10.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "poiCategories": {
+            "description": "Filter POI results by UPPER_SNAKE_CASE text category codes (e.g. 'RESTAURANT', 'PARKING_GARAGE'), NOT numeric IDs. IMPORTANT: Never guess codes — always call tomtom-poi-categories first with the user's intent as keywords to discover valid codes.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "language": {
+            "description": "Language for results (IETF tag). Examples: 'en-US', 'de-DE'.",
+            "type": "string"
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, no geometry. 'geometry': compact plus a 'geometry' key holding a GeoJSON FeatureCollection ([lon, lat], at most 1,000 vertices per feature); use this to get coordinates to draw or process. 'full': the raw API response, lossless and many times larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "geometry",
+              "full"
+            ]
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-ev-search",
+      "provider": "tomtom",
+      "description": "Find EV charging stations with their connector types and power levels. Results carry no real-time charger availability.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "default": "",
+            "description": "Search query for EV charging stations. Can be a station name or brand (e.g., 'Tesla Supercharger', 'ChargePoint'). Leave empty to find all nearby stations.",
+            "type": "string"
+          },
+          "position": {
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Center position as [longitude, latitude] for EV station search (GeoJSON convention). Required for location-based results. Example: [4.89707, 52.377956] for Amsterdam."
+          },
+          "radius": {
+            "description": "Search radius in meters. Without it, results are biased toward position with no distance limit. Examples: 1000 (walking), 5000 (local), 20000 (wide area).",
+            "type": "number",
+            "minimum": 1
+          },
+          "connectorTypes": {
+            "description": "Filter by EV connector types: 'IEC62196Type2CableAttached' is Type 2/Mennekes, 'IEC62196Type2CCS' CCS2, 'IEC62196Type1CCS' CCS1, 'IEC62196Type1' Type 1/J1772, 'StandardHouseholdCountrySpecific' a domestic plug.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "StandardHouseholdCountrySpecific",
+                "IEC62196Type1",
+                "IEC62196Type1CCS",
+                "IEC62196Type2CableAttached",
+                "IEC62196Type2Outlet",
+                "IEC62196Type2CCS",
+                "IEC62196Type3",
+                "Chademo",
+                "GBT20234Part2",
+                "GBT20234Part3",
+                "IEC60309AC3PhaseRed",
+                "IEC60309AC1PhaseBlue",
+                "IEC60309DCWhite",
+                "Tesla"
+              ]
+            }
+          },
+          "minPowerKW": {
+            "description": "Minimum charging power in kW. Examples: 7 (slow AC), 22 (fast AC), 50 (DC fast), 150 (ultra-fast DC).",
+            "type": "number"
+          },
+          "limit": {
+            "description": "Maximum number of results (1-100). Default: 10.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "language": {
+            "description": "Language for results (IETF tag). Examples: 'en-US', 'de-DE', 'fr-FR'.",
+            "type": "string"
+          },
+          "countries": {
+            "description": "Limit results to countries (ISO alpha-2 codes). Example: ['US'], ['DE', 'FR'].",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cursor": {
+            "description": "The next page of results: the nextCursor of the previous response, with the same other parameters.",
+            "type": "string"
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, saves tokens. 'full': the raw API response with every field, lossless and much larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "full"
+            ]
+          }
+        },
+        "required": [
+          "position"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-fuzzy-search",
+      "provider": "tomtom",
+      "description": "Typo-tolerant search for addresses, points of interest, and geographies.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Natural language search query. Works with addresses, POI names, coordinates, or free-form text. Examples: 'restaurants near Central Park', 'IKEA stores', '52.3791,4.8994', 'coffee shops downtown'"
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, saves tokens. 'full': the raw API response with every field, lossless and much larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "full"
+            ]
+          },
+          "limit": {
+            "description": "Maximum number of results to return (1-100). Default: 10.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "language": {
+            "description": "Preferred language for results using IETF language tags. Examples: 'en-US', 'fr-FR', 'de-DE', 'es-ES'",
+            "type": "string"
+          },
+          "countries": {
+            "description": "Limit results to specific countries using ISO alpha-2 codes. Example: ['US'], ['FR', 'GB'], ['NL', 'DE']",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "view": {
+            "description": "Geopolitical view for disputed territories.",
+            "type": "string",
+            "enum": [
+              "Unified",
+              "AE",
+              "AR",
+              "BN",
+              "CL",
+              "CN",
+              "DZ",
+              "IL",
+              "IN",
+              "KR",
+              "MA",
+              "MY",
+              "PH",
+              "PK",
+              "RS",
+              "RU",
+              "TR",
+              "TW",
+              "US",
+              "VN"
+            ]
+          },
+          "cursor": {
+            "description": "The next page of results: the nextCursor of the previous response, with the same other parameters.",
+            "type": "string"
+          },
+          "extendedPostalCodesFor": {
+            "description": "Comma-separated index types whose results carry extended postal codes: Geo, PAD, Addr, Str, XStr, and POI for POI results. Default: every type except Geo, so listing types removes the codes from the others. Examples: 'PAD,Addr', 'Geo'.",
+            "type": "string"
+          },
+          "mapcodes": {
+            "description": "Include mapcode information in the response. Mapcodes represent specific locations within a few meters and are designed to be short, easy to recognize and communicate. Options: Local, International, Alternative. Examples: ['Local'] (local mapcode only), ['Local', 'Alternative'] (multiple types).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeZone": {
+            "description": "Used to indicate the mode in which the timeZone object should be returned. Values: iana Mode shows the IANA ID which allows the user to determine the current time zone for the POI. Usage examples: timeZone=iana",
+            "type": "string"
+          },
+          "position": {
+            "description": "Center position as [longitude, latitude] for location bias (GeoJSON convention). Example: [4.89707, 52.377956] for Amsterdam. Not with boundingBox.",
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "radius": {
+            "description": "Search radius in meters around position; needs position. Examples: 1000 (neighborhood), 5000 (city area), 20000 (metro area).",
+            "type": "number"
+          },
+          "boundingBox": {
+            "description": "Bounding box as [minLon, minLat, maxLon, maxLat] (GeoJSON convention). Example: [4.8, 52.3, 4.95, 52.45] for Amsterdam area. Not with position.",
+            "minItems": 4,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "brandSet": {
+            "description": "Filter by brand names, comma-separated. Examples: 'Starbucks', 'Marriott,Hilton'.",
+            "type": "string"
+          },
+          "connectorSet": {
+            "description": "EV connector types, comma-separated. Examples: 'IEC62196Type2CCS', 'IEC62196Type2CableAttached,Chademo', 'Tesla'.",
+            "type": "string"
+          },
+          "fuelSet": {
+            "description": "Fuel types, comma-separated: Petrol, LPG, Diesel, Biodiesel, DieselForCommercialVehicles, E85, LNG, CNG, Hydrogen, AdBlue.",
+            "type": "string"
+          },
+          "minPowerKW": {
+            "description": "Minimum charging power in kW for EV stations",
+            "type": "number"
+          },
+          "maxPowerKW": {
+            "description": "Maximum charging power in kW for EV stations",
+            "type": "number"
+          },
+          "openingHours": {
+            "description": "List of opening hours for a POI (Points of Interest).Value: `nextSevenDays` Mode shows the opening hours for next week, starting with the current day in the local time of the POI. Usage example: openingHours=nextSevenDays",
+            "type": "string"
+          },
+          "typeahead": {
+            "description": "Enable autocomplete mode for partial queries. Use for search-as-you-type interfaces.",
+            "type": "boolean"
+          },
+          "maxFuzzyLevel": {
+            "description": "Maximum fuzzy matching level (1-4)",
+            "type": "number"
+          },
+          "minFuzzyLevel": {
+            "description": "Minimum fuzzy matching level (1-4)",
+            "type": "number"
+          },
+          "entityTypeSet": {
+            "description": "Filter results by geographic entity types, comma-separated: Country, CountrySubdivision, CountrySecondarySubdivision, CountryTertiarySubdivision, Municipality, MunicipalitySubdivision, MunicipalitySecondarySubdivision, Neighbourhood, PostalCodeArea. Note: This parameter is for geographic entities only, not POIs. For POI filtering, use poiCategories instead",
+            "type": "string"
+          },
+          "idxSet": {
+            "description": "Search only these indexes, comma-separated: 'Geo' (geographies), 'PAD' (point addresses), 'Addr' (address ranges), 'Str' (streets), 'XStr' (cross streets), 'POI'.",
+            "type": "string"
+          },
+          "relatedPois": {
+            "description": "Include related points of interest: 'off', 'child', 'parent' or 'all'. Default: 'off'.",
+            "type": "string"
+          },
+          "poiCategories": {
+            "description": "Filter POI results by UPPER_SNAKE_CASE text category codes (e.g. 'RESTAURANT', 'PARKING_GARAGE'), NOT numeric IDs. IMPORTANT: Never guess codes — always call tomtom-poi-categories first with the user's intent as keywords to discover valid codes.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-geocode",
+      "provider": "tomtom",
+      "description": "Convert street addresses to coordinates.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Full address to convert to coordinates. Include as much detail as possible (street, city, country) for accurate results. Examples: '1600 Pennsylvania Ave, Washington DC', 'Eiffel Tower, Paris, France'"
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, saves tokens. 'full': the raw API response with every field, lossless and much larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "full"
+            ]
+          },
+          "limit": {
+            "description": "Maximum number of results to return (1-100). Default: 10.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "language": {
+            "description": "Preferred language for results using IETF language tags. Examples: 'en-US', 'fr-FR', 'de-DE', 'es-ES'",
+            "type": "string"
+          },
+          "countries": {
+            "description": "Limit results to specific countries using ISO alpha-2 codes. Example: ['US'], ['FR', 'GB'], ['NL', 'DE']",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "view": {
+            "description": "Geopolitical view for disputed territories.",
+            "type": "string",
+            "enum": [
+              "Unified",
+              "AE",
+              "AR",
+              "BN",
+              "CL",
+              "CN",
+              "DZ",
+              "IL",
+              "IN",
+              "KR",
+              "MA",
+              "MY",
+              "PH",
+              "PK",
+              "RS",
+              "RU",
+              "TR",
+              "TW",
+              "US",
+              "VN"
+            ]
+          },
+          "cursor": {
+            "description": "The next page of results: the nextCursor of the previous response, with the same other parameters.",
+            "type": "string"
+          },
+          "extendedPostalCodesFor": {
+            "description": "Comma-separated index types whose results carry extended postal codes: Geo, PAD, Addr, Str, XStr, and POI for POI results. Default: every type except Geo, so listing types removes the codes from the others. Examples: 'PAD,Addr', 'Geo'.",
+            "type": "string"
+          },
+          "mapcodes": {
+            "description": "Include mapcode information in the response. Mapcodes represent specific locations within a few meters and are designed to be short, easy to recognize and communicate. Options: Local, International, Alternative. Examples: ['Local'] (local mapcode only), ['Local', 'Alternative'] (multiple types).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "position": {
+            "description": "Center position as [longitude, latitude] for location bias (GeoJSON convention). Example: [4.89707, 52.377956] for Amsterdam. Not with boundingBox.",
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "radius": {
+            "description": "Search radius in meters around position; needs position.",
+            "type": "number"
+          },
+          "boundingBox": {
+            "description": "Bounding box as [minLon, minLat, maxLon, maxLat] (GeoJSON convention). Example: [4.8, 52.3, 4.95, 52.45] for Amsterdam area. Not with position.",
+            "minItems": 4,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "entityTypeSet": {
+            "description": "Filter results by geographic entity types, comma-separated: Country, CountrySubdivision, CountrySecondarySubdivision, CountryTertiarySubdivision, Municipality, MunicipalitySubdivision, MunicipalitySecondarySubdivision, Neighbourhood, PostalCodeArea. Note: This parameter is for geographic entities only, not POIs. For POI filtering, use poiCategories instead",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-get-api-key",
+      "provider": "tomtom",
+      "description": "Internal tool for apps to retrieve the TomTom API key",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "tomtom-get-app-config",
+      "provider": "tomtom",
+      "description": "Internal tool for apps to retrieve client configuration such as the attribution user-agent",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "tomtom-get-viz-data",
+      "provider": "tomtom",
+      "description": "Internal tool for apps to retrieve cached visualization data by viz_id",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "viz_id": {
+            "type": "string",
+            "description": "Unique visualization ID from the tool response _meta"
+          }
+        },
+        "required": [
+          "viz_id"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-nearby",
+      "provider": "tomtom",
+      "description": "Find places of a kind close to a specific point. Best for 'what's around here?' queries when you have exact coordinates (lat/lon). Needs poiCategories, or a brand, fuel, connector or charging-power filter. Returns results sorted by distance. Use tomtom-area-search instead when the search area is a polygon or bounding box rather than a simple radius.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "position": {
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Center position as [longitude, latitude] for nearby search (GeoJSON convention). Example: [4.89707, 52.377956] for Amsterdam. Use precise coordinates from geocoding."
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, saves tokens. 'full': the raw API response with every field, lossless and much larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "full"
+            ]
+          },
+          "limit": {
+            "description": "Maximum number of results to return (1-100). Default: 20.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "language": {
+            "description": "Preferred language for results using IETF language tags. Examples: 'en-US', 'fr-FR', 'de-DE', 'es-ES'",
+            "type": "string"
+          },
+          "countries": {
+            "description": "Limit results to specific countries using ISO alpha-2 codes. Example: ['US'], ['FR', 'GB'], ['NL', 'DE']",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "view": {
+            "description": "Geopolitical view for disputed territories.",
+            "type": "string",
+            "enum": [
+              "Unified",
+              "AE",
+              "AR",
+              "BN",
+              "CL",
+              "CN",
+              "DZ",
+              "IL",
+              "IN",
+              "KR",
+              "MA",
+              "MY",
+              "PH",
+              "PK",
+              "RS",
+              "RU",
+              "TR",
+              "TW",
+              "US",
+              "VN"
+            ]
+          },
+          "cursor": {
+            "description": "The next page of results: the nextCursor of the previous response, with the same other parameters.",
+            "type": "string"
+          },
+          "extendedPostalCodesFor": {
+            "description": "Comma-separated index types whose results carry extended postal codes: Geo, PAD, Addr, Str, XStr, and POI for POI results. Default: every type except Geo, so listing types removes the codes from the others. Examples: 'PAD,Addr', 'Geo'.",
+            "type": "string"
+          },
+          "mapcodes": {
+            "description": "Include mapcode information in the response. Mapcodes represent specific locations within a few meters and are designed to be short, easy to recognize and communicate. Options: Local, International, Alternative. Examples: ['Local'] (local mapcode only), ['Local', 'Alternative'] (multiple types).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeZone": {
+            "description": "Used to indicate the mode in which the timeZone object should be returned. Values: iana Mode shows the IANA ID which allows the user to determine the current time zone for the POI. Usage examples: timeZone=iana",
+            "type": "string"
+          },
+          "brandSet": {
+            "description": "Filter by brand names, comma-separated. Examples: 'Starbucks', 'Marriott,Hilton'.",
+            "type": "string"
+          },
+          "connectorSet": {
+            "description": "EV connector types, comma-separated. Examples: 'IEC62196Type2CCS', 'IEC62196Type2CableAttached,Chademo', 'Tesla'.",
+            "type": "string"
+          },
+          "fuelSet": {
+            "description": "Fuel types, comma-separated: Petrol, LPG, Diesel, Biodiesel, DieselForCommercialVehicles, E85, LNG, CNG, Hydrogen, AdBlue.",
+            "type": "string"
+          },
+          "minPowerKW": {
+            "description": "Minimum charging power in kW for EV stations",
+            "type": "number"
+          },
+          "maxPowerKW": {
+            "description": "Maximum charging power in kW for EV stations",
+            "type": "number"
+          },
+          "openingHours": {
+            "description": "List of opening hours for a POI (Points of Interest).Value: `nextSevenDays` Mode shows the opening hours for next week, starting with the current day in the local time of the POI. Usage example: openingHours=nextSevenDays",
+            "type": "string"
+          },
+          "radius": {
+            "description": "Search radius in meters. Default: 1000. Recommended: 500 (walking), 1000 (local), 5000 (driving), 20000 (wide area).",
+            "type": "number"
+          },
+          "poiCategories": {
+            "description": "POI categories to find, as UPPER_SNAKE_CASE codes (e.g. 'RESTAURANT', 'PARKING_GARAGE'), NOT numeric IDs. Required unless brandSet, connectorSet, fuelSet, minPowerKW or maxPowerKW is given. IMPORTANT: Never guess codes — always call tomtom-poi-categories first with the user's intent as keywords to discover valid codes.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "relatedPois": {
+            "description": "Include related points of interest: 'off', 'child', 'parent' or 'all'. Default: 'off'.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "position"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-poi-categories",
+      "provider": "tomtom",
+      "description": "Look up POI category codes from natural language. The poiCategories parameter of the search tools accepts only codes returned by this tool. Category codes are UPPER_SNAKE_CASE text strings (e.g. 'ITALIAN_RESTAURANT', 'PARKING_GARAGE'), not numeric IDs. Workflow: (1) extract the user's intent as keywords (e.g. 'italian restaurants in Amsterdam' → filters: ['italian restaurant']); (2) call this tool with those keywords in the filters parameter; (3) pass the returned category codes in the poiCategories parameter of search tools (fuzzy-search, poi-search, nearby, area-search). Guessed or hardcoded category codes are unreliable; this tool is the source of valid codes.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "filters": {
+            "description": "Keywords to find categories by name or synonym, accents ignored. Each keyword returns its best-matching categories, so 'bar' finds Bar and not Nail Salon; with several keywords, each one's best match comes first. Examples: ['gym'], ['italian restaurant'], ['parking', 'garage']. Omit to return all available POI categories.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "tomtom-poi-search",
+      "provider": "tomtom",
+      "description": "Search for a specific business or POI by name, or browse an entire POI category. Best for finding a known place (e.g. 'Starbucks') or listing all businesses of a type (e.g. the 'ITALIAN_RESTAURANT' category code from tomtom-poi-categories). Supports optional location bias but does not constrain results to a strict geographic boundary — tomtom-area-search does that.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Name of the POI to search for. If the intended query is a POI category like 'restaurant', provide an empty string for this param and use the category filter parameter to apply the desired category filter."
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, saves tokens. 'full': the raw API response with every field, lossless and much larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "full"
+            ]
+          },
+          "limit": {
+            "description": "Maximum number of results to return (1-100). Default: 10.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "language": {
+            "description": "Preferred language for results using IETF language tags. Examples: 'en-US', 'fr-FR', 'de-DE', 'es-ES'",
+            "type": "string"
+          },
+          "countries": {
+            "description": "Limit results to specific countries using ISO alpha-2 codes. Example: ['US'], ['FR', 'GB'], ['NL', 'DE']",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "view": {
+            "description": "Geopolitical view for disputed territories.",
+            "type": "string",
+            "enum": [
+              "Unified",
+              "AE",
+              "AR",
+              "BN",
+              "CL",
+              "CN",
+              "DZ",
+              "IL",
+              "IN",
+              "KR",
+              "MA",
+              "MY",
+              "PH",
+              "PK",
+              "RS",
+              "RU",
+              "TR",
+              "TW",
+              "US",
+              "VN"
+            ]
+          },
+          "cursor": {
+            "description": "The next page of results: the nextCursor of the previous response, with the same other parameters.",
+            "type": "string"
+          },
+          "extendedPostalCodesFor": {
+            "description": "Comma-separated index types whose results carry extended postal codes: Geo, PAD, Addr, Str, XStr, and POI for POI results. Default: every type except Geo, so listing types removes the codes from the others. Examples: 'PAD,Addr', 'Geo'.",
+            "type": "string"
+          },
+          "mapcodes": {
+            "description": "Include mapcode information in the response. Mapcodes represent specific locations within a few meters and are designed to be short, easy to recognize and communicate. Options: Local, International, Alternative. Examples: ['Local'] (local mapcode only), ['Local', 'Alternative'] (multiple types).",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeZone": {
+            "description": "Used to indicate the mode in which the timeZone object should be returned. Values: iana Mode shows the IANA ID which allows the user to determine the current time zone for the POI. Usage examples: timeZone=iana",
+            "type": "string"
+          },
+          "position": {
+            "description": "Center position as [longitude, latitude] for location bias (GeoJSON convention). Example: [4.89707, 52.377956] for Amsterdam. Not with boundingBox.",
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "radius": {
+            "description": "Search radius in meters around position; needs position. Examples: 1000 (walking), 5000 (driving), 20000 (wide area).",
+            "type": "number"
+          },
+          "boundingBox": {
+            "description": "Bounding box as [minLon, minLat, maxLon, maxLat] (GeoJSON convention). Example: [4.8, 52.3, 4.95, 52.45] for Amsterdam area. Not with position.",
+            "minItems": 4,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "brandSet": {
+            "description": "Filter by brand names, comma-separated. Examples: 'Starbucks', 'Marriott,Hilton'.",
+            "type": "string"
+          },
+          "connectorSet": {
+            "description": "EV connector types, comma-separated. Examples: 'IEC62196Type2CCS', 'IEC62196Type2CableAttached,Chademo', 'Tesla'.",
+            "type": "string"
+          },
+          "fuelSet": {
+            "description": "Fuel types, comma-separated: Petrol, LPG, Diesel, Biodiesel, DieselForCommercialVehicles, E85, LNG, CNG, Hydrogen, AdBlue.",
+            "type": "string"
+          },
+          "minPowerKW": {
+            "description": "Minimum charging power in kW for EV stations",
+            "type": "number"
+          },
+          "maxPowerKW": {
+            "description": "Maximum charging power in kW for EV stations",
+            "type": "number"
+          },
+          "openingHours": {
+            "description": "List of opening hours for a POI (Points of Interest).Value: `nextSevenDays` Mode shows the opening hours for next week, starting with the current day in the local time of the POI. Usage example: openingHours=nextSevenDays",
+            "type": "string"
+          },
+          "typeahead": {
+            "description": "Autocomplete mode for partial queries. Use for search interfaces.",
+            "type": "boolean"
+          },
+          "relatedPois": {
+            "description": "Include related points of interest: 'off', 'child', 'parent' or 'all'. Default: 'off'.",
+            "type": "string"
+          },
+          "poiCategories": {
+            "description": "Filter POI results by UPPER_SNAKE_CASE text category codes (e.g. 'RESTAURANT', 'PARKING_GARAGE'), NOT numeric IDs. IMPORTANT: Never guess codes — always call tomtom-poi-categories first with the user's intent as keywords to discover valid codes.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-reverse-geocode",
+      "provider": "tomtom",
+      "description": "Convert coordinates to addresses.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "position": {
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Position as [longitude, latitude] to reverse geocode (GeoJSON convention). Precision to 4+ decimal places recommended. Example: [4.89707, 52.377956]."
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, saves tokens. 'full': the raw API response with every field, lossless and much larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "full"
+            ]
+          },
+          "language": {
+            "description": "Preferred language for results using IETF language tags. Examples: 'en-US', 'fr-FR', 'de-DE', 'es-ES'",
+            "type": "string"
+          },
+          "view": {
+            "description": "Geopolitical view for disputed territories.",
+            "type": "string",
+            "enum": [
+              "Unified",
+              "AE",
+              "AR",
+              "BN",
+              "CL",
+              "CN",
+              "DZ",
+              "IL",
+              "IN",
+              "KR",
+              "MA",
+              "MY",
+              "PH",
+              "PK",
+              "RS",
+              "RU",
+              "TR",
+              "TW",
+              "US",
+              "VN"
+            ]
+          },
+          "radius": {
+            "description": "Search radius in meters. Default: 100",
+            "type": "number"
+          },
+          "heading": {
+            "description": "Heading direction in degrees (0-360) for improved accuracy on roads",
+            "type": "number"
+          },
+          "entityType": {
+            "description": "Filter by geography entity types, comma-separated: Country, CountrySubdivision, CountrySecondarySubdivision, CountryTertiarySubdivision, Municipality, MunicipalitySubdivision, MunicipalitySecondarySubdivision, Neighbourhood, PostalCodeArea. Not with heading, which the API then ignores.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "position"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-routing",
+      "provider": "tomtom",
+      "description": "Calculate optimal routes through an ordered list of locations [origin, ...stops, destination]. The primary tool for directions, routes, travel time, or distance between places — whether a simple A-to-B or a multi-stop itinerary (e.g. 'route from Amsterdam to Berlin', 'drive from A to B via C and D'). Returns distance, travel time and traffic delay, with a summary per leg. Turn-by-turn instructions are not available. Route polylines are omitted unless response_detail is 'geometry'.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "locations": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "minItems": 2,
+              "maxItems": 2,
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Position as [longitude, latitude] (GeoJSON convention, lng first). Example: [4.89707, 52.377956] for Amsterdam, [13.404954, 52.520008] for Berlin."
+            },
+            "description": "Ordered list of coordinates [origin, ...intermediateStops, destination]. Minimum 2 (origin + destination); add intermediate positions for multi-stop routes. Use geocoding for accurate coordinates."
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, no geometry. 'geometry': compact plus a 'geometry' key holding a GeoJSON FeatureCollection ([lon, lat], at most 1,000 vertices per feature); use this to get coordinates to draw or process. 'full': the raw API response, lossless and many times larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "geometry",
+              "full"
+            ]
+          },
+          "routeType": {
+            "description": "Route optimization: 'fast' (time-optimized), 'short' (distance-optimized), 'efficient' (fuel-efficient), 'thrilling' (scenic). Default: 'fast'.",
+            "type": "string",
+            "enum": [
+              "fast",
+              "short",
+              "efficient",
+              "thrilling"
+            ]
+          },
+          "travelMode": {
+            "description": "Transportation mode. Default: 'car'.",
+            "type": "string",
+            "enum": [
+              "car"
+            ]
+          },
+          "traffic": {
+            "description": "Traffic consideration: 'live' (real-time + historical), 'historical' (historical only).",
+            "type": "string",
+            "enum": [
+              "live",
+              "historical"
+            ]
+          },
+          "avoid": {
+            "description": "Route features to avoid. May increase travel time.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "tollRoads",
+                "motorways",
+                "ferries",
+                "unpavedRoads",
+                "carpools",
+                "alreadyUsedRoads",
+                "borderCrossings",
+                "tunnels",
+                "carTrains",
+                "lowEmissionZones"
+              ]
+            }
+          },
+          "departAt": {
+            "description": "Departure time in ISO format (e.g., '2025-06-24T14:30:00Z'). Cannot be used with arriveAt.",
+            "type": "string"
+          },
+          "arriveAt": {
+            "description": "Arrival time in ISO format (e.g., '2025-06-24T17:00:00Z'). Cannot be used with departAt.",
+            "type": "string"
+          },
+          "maxAlternatives": {
+            "description": "Number of alternative routes (0-5). More alternatives = more options but larger response.",
+            "type": "number"
+          },
+          "vehicleMaxSpeed": {
+            "description": "Maximum vehicle speed in km/h for commercial routing.",
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "vehicleWeight": {
+            "description": "Vehicle weight in kg.",
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "sectionType": {
+            "description": "Keep only these section types in the route, besides leg. Default: all types the route has. Compact responses drop the map-rendering types (urban, tunnel, motorway, lowEmissionZone, pedestrian, speedLimit, roadShields, vehicleRestricted); they appear only with response_detail 'full'.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "carpool",
+                "carTrain",
+                "country",
+                "ferry",
+                "importantRoadStretch",
+                "lowEmissionZone",
+                "motorway",
+                "pedestrian",
+                "roadShields",
+                "speedLimit",
+                "toll",
+                "tollRoad",
+                "tollVignette",
+                "traffic",
+                "tunnel",
+                "unpaved",
+                "urban",
+                "vehicleRestricted"
+              ]
+            }
+          },
+          "vehicleHeading": {
+            "description": "Heading of the vehicle at the origin, in degrees clockwise from north (0-359), for a route that starts in the direction of travel.",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 359
+          }
+        },
+        "required": [
+          "locations"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-search-along-route",
+      "provider": "tomtom",
+      "description": "Find points of interest (restaurants, gas stations, hotels, etc.) along a route corridor. Calculates the route between origin and destination, then searches for POIs within a configurable distance from the route. The route line is omitted unless response_detail is 'geometry'.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "origin": {
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Route starting point as [longitude, latitude] (GeoJSON convention). Use precise coordinates from geocoding. Example: [4.89707, 52.377956]."
+          },
+          "destination": {
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Route ending point as [longitude, latitude] (GeoJSON convention). Use precise coordinates from geocoding. Example: [13.404954, 52.520008]."
+          },
+          "query": {
+            "type": "string",
+            "description": "What to search for along the route. Examples: 'gas station', 'restaurant', 'coffee', 'hotel', 'EV charging'."
+          },
+          "corridorWidth": {
+            "description": "Search corridor width in meters from the route centerline. Default: 5000 (5km). Smaller values = closer to route.",
+            "type": "number"
+          },
+          "limit": {
+            "description": "Maximum number of POI results (1-100). Default: 10.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "poiCategories": {
+            "description": "Filter POI results by UPPER_SNAKE_CASE text category codes (e.g. 'RESTAURANT', 'PARKING_GARAGE'), NOT numeric IDs. IMPORTANT: Never guess codes — always call tomtom-poi-categories first with the user's intent as keywords to discover valid codes.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "language": {
+            "description": "Language for results (IETF tag). Examples: 'en-US', 'de-DE'.",
+            "type": "string"
+          },
+          "routeType": {
+            "description": "Route optimization for the base route: 'fast', 'short', 'efficient' or 'thrilling'. Default: 'fast'.",
+            "type": "string",
+            "enum": [
+              "fast",
+              "short",
+              "efficient",
+              "thrilling"
+            ]
+          },
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, no geometry. 'geometry': compact plus a 'geometry' key holding a GeoJSON FeatureCollection ([lon, lat], at most 1,000 vertices per feature); use this to get coordinates to draw or process. 'full': the raw API response, lossless and many times larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "geometry",
+              "full"
+            ]
+          }
+        },
+        "required": [
+          "origin",
+          "destination",
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "tomtom-traffic",
+      "provider": "tomtom",
+      "description": "Find traffic incidents in an area. The primary tool for questions about traffic, accidents, road closures, congestion, or dangerous road conditions. Returns severity, description, delay and affected roads for each incident. Incident locations are omitted unless response_detail is 'geometry'.",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "show_ui": {
+            "default": false,
+            "description": "Request the interactive map widget. Only hosts that support MCP Apps render it, and it returns no coordinates to the caller. Default: false",
+            "type": "boolean"
+          },
+          "response_detail": {
+            "default": "compact",
+            "description": "Response detail level. 'compact' (default): essential fields and point coordinates, no geometry. 'geometry': compact plus a 'geometry' key holding a GeoJSON FeatureCollection ([lon, lat], at most 1,000 vertices per feature); use this to get coordinates to draw or process. 'full': the raw API response, lossless and many times larger.",
+            "type": "string",
+            "enum": [
+              "compact",
+              "geometry",
+              "full"
+            ]
+          },
+          "bbox": {
+            "minItems": 4,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Bounding box as [minLon, minLat, maxLon, maxLat] (GeoJSON convention). Example: [-74.02, 40.70, -73.96, 40.80] for lower Manhattan. Use smaller areas for better results."
+          },
+          "language": {
+            "description": "Language for incident descriptions: 'en-GB', 'de-DE', 'fr-FR', 'es-ES'. Default: 'en-GB'.",
+            "type": "string"
+          },
+          "categoryFilter": {
+            "description": "Incident categories to return. Default: all categories.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "accident",
+                "broken-down-vehicle",
+                "danger",
+                "flooding",
+                "fog",
+                "frost",
+                "jam",
+                "lane-closed",
+                "other",
+                "rain",
+                "road-closed",
+                "roadworks",
+                "wind"
+              ]
+            }
+          },
+          "timeValidityFilter": {
+            "description": "Which incidents to return by time: 'present' (happening now), 'future' (planned, e.g. road works). Default: ['present'].",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "present",
+                "future"
+              ]
+            }
+          },
+          "maxResults": {
+            "description": "Maximum number of incidents to return (1-1000). Default: 100. When more incidents match, the most severe are returned and the response includes an incidentSummary with full totals.",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "bbox"
+        ]
+      }
+    }
+  ]
+}

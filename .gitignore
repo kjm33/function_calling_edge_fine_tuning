@@ -24,6 +24,7 @@ train/runs/
 # generated data (large, append-mode artifacts)
 data/*
 !data/gold_seed_ids.json
+!data/tool_catalog.json
 !data/final_stripped/
 
 # misc

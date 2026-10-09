@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-10-09T14:49:35",
+  "files": [
+    {
+      "source": "/home/kamil/projects/here/function_calling_edge_fine_tuning/data/final/train.jsonl",
+      "output": "/home/kamil/projects/here/function_calling_edge_fine_tuning/data/final_stripped/train.jsonl",
+      "rows": 5102,
+      "bytes_in": 221403419,
+      "bytes_out": 39945817
+    },
+    {
+      "source": "/home/kamil/projects/here/function_calling_edge_fine_tuning/data/final/val.jsonl",
+      "output": "/home/kamil/projects/here/function_calling_edge_fine_tuning/data/final_stripped/val.jsonl",
+      "rows": 270,
+      "bytes_in": 11653475,
+      "bytes_out": 2099186
+    }
+  ],
+  "bytes_in_total": 233056894,
+  "bytes_out_total": 42045003
+}
